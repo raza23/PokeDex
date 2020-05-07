@@ -4,16 +4,46 @@
 //
 //  Created by Raza Shareef on 5/6/20.
 //  Copyright © 2020 raza_s. All rights reserved.
-//
+
 
 import UIKit
 
 class ViewController: UITableViewController {
-    let pokemon = [
-        Pokemon(name:"Bulbasaur", number:1,sprite: "https://img.pokemondb.net/sprites/black-white/normal/bulbasaur.png"),
-        Pokemon(name:"Ivysaur",number:2,sprite:"https://img.pokemondb.net/sprites/black-white/normal/ivysaur.png"),
-        Pokemon(name: "Venasaur", number: 3,sprite: "https://img.pokemondb.net/sprites/black-white/normal/venusaur.png")
-    ]
+//    let pokemon = [
+//        Pokemon(name:"Bulbasaur", number:1,sprite: "https://img.pokemondb.net/sprites/black-white/normal/bulbasaur.png"),
+//        Pokemon(name:"Ivysaur",number:2,sprite:"https://img.pokemondb.net/sprites/black-white/normal/ivysaur.png"),
+//        Pokemon(name: "Venasaur", number: 3,sprite: "https://img.pokemondb.net/sprites/black-white/normal/venusaur.png")
+//    ]
+    
+    var pokemon: [Pokemon] = []
+    
+    func capitalize(text: String) -> String{
+       return text.prefix(1).uppercased() + text.dropFirst()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let url = URL(string: "https://pokeapi.co/api/v2/pokemon?limit=151")
+        guard let u = url else {
+            return
+        }
+        
+        URLSession.shared.dataTask(with: u) {(data,response,error) in
+            guard let data = data else {
+                return
+            }
+            do{
+                let pokemonList = try JSONDecoder().decode(PokemonList.self, from: data)
+                self.pokemon = pokemonList.results
+                
+                DispatchQueue.main.async{
+                self.tableView.reloadData()
+                }
+            } catch let error {
+                print("\(error)")
+            }
+        }.resume()
+    }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -25,7 +55,7 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PokemonCell", for: indexPath)
-        cell.textLabel?.text = pokemon[indexPath.row].name
+        cell.textLabel?.text = capitalize(text:  pokemon[indexPath.row].name)
         return cell
     }
     
