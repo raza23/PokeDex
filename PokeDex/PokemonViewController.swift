@@ -17,7 +17,6 @@ class PokemonViewController: UIViewController {
     @IBOutlet var numberLabel: UILabel!
 //    @IBOutlet var spriteLabel:UILabel!
     @IBOutlet  var type1: UILabel!
-//    @IBOutlet  var type2label: UILabel!
     @IBOutlet var type2: UILabel!
     //    @IBOutlet weak var spriteView: UIImageView!
      
