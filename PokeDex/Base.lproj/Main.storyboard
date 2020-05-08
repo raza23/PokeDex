@@ -94,6 +94,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="GJy-Lo-gBc"/>
                     <connections>
+                        <outlet property="SpriteView" destination="kDd-tZ-krp" id="9Th-Ns-I1z"/>
                         <outlet property="nameLabel" destination="CtH-VR-R2s" id="cUr-hs-1k6"/>
                         <outlet property="numberLabel" destination="Ewe-ds-jHH" id="Vfl-KJ-iag"/>
                         <outlet property="type1" destination="giG-G7-2vM" id="Wjc-de-HbC"/>

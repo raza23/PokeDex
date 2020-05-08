@@ -14,16 +14,18 @@ struct PokemonList: Codable {
 
 struct Pokemon: Codable {
     let name: String
-//    let number: Int
     let url: String
-//    let sprite: String
 }
 
 struct PokemonData: Codable {
     let id: Int
     let types: [PokemonTypeEntry]
+    let sprites: PokemonSprites
 }
 
+struct PokemonSprites: Codable {
+    let front_default: String
+}
 
 struct PokemonType: Codable {
     let name: String

@@ -10,15 +10,34 @@
 // TESTING TESTING TESTING
 import UIKit
 
+extension UIImageView {
+    func downloaded(from url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
+        contentMode = mode
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                let data = data, error == nil,
+                let image = UIImage(data: data)
+                else { return }
+            DispatchQueue.main.async() {
+                self.image = image
+            }
+        }.resume()
+    }
+//    func downloaded(from link: String, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
+//        guard let url = URL(string: link) else { return }
+//        downloaded(from: url, contentMode: mode)
+//    }
+}
+
 class PokemonViewController: UIViewController {
-//    let spriteUrl = URL(string: pokemon.sprite)
     
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var numberLabel: UILabel!
-//    @IBOutlet var spriteLabel:UILabel!
     @IBOutlet  var type1: UILabel!
     @IBOutlet var type2: UILabel!
-    //    @IBOutlet weak var spriteView: UIImageView!
+    @IBOutlet var SpriteView: UIImageView!
      
     
     var pokemon: Pokemon!
@@ -41,11 +60,16 @@ class PokemonViewController: UIViewController {
             do{
                 let pokemonData = try JSONDecoder().decode(PokemonData.self, from: data)
                 
-                DispatchQueue.main.async {
                     
-                
+                DispatchQueue.main.async {
+                    let urlString = URL(string:pokemonData.sprites.front_default)
+//                let url = URL(string: urlString)
+                    
                 self.nameLabel.text = self.pokemon.name
                 self.numberLabel.text = String(format: "#%03d",pokemonData.id)
+                self.SpriteView.downloaded(from: urlString!)
+                
+                
                 
                 for typeEntry in pokemonData.types{
                     if typeEntry.slot == 1 {
@@ -61,27 +85,8 @@ class PokemonViewController: UIViewController {
                 print("\(error)")
             }
         }.resume()
-        
-//        nameLabel.text = pokemon.name
-//        numberLabel.text = String(pokemon.number)
-//        numberLabel.text = String(format: "#%03d",pokemon.number)
-        
-//       spriteLabel.text = pokemon.sprite
-//        downloadImage(with: URL(string: pokemon.sprite)!)
+    }
 }
-//    func downloadImage(with url:URL){
-//        URLSession.shared.dataTask(with: url){
-//            (data,respone,error) in
-//            if error != nil{
-//                print(error!)
-//                return
-//            }
-//            DispatchQueue.main.async {
-////            self.spriteView.image = UIImage(data: data!)
-//
-//            }
-//        }.resume()
-//
-//    }
-    
-}
+        
+
+
